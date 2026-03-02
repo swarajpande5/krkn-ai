@@ -99,6 +99,7 @@ class JSONSummaryReporter:
         results_summary: Dict[str, Any] = {
             "run_id": self.run_uuid,
             "seed": self.seed,
+            "duration": duration_seconds,
             "start_time": self.start_time.isoformat() if self.start_time else None,
             "end_time": self.end_time.isoformat() if self.end_time else None,
             "duration_seconds": round(duration_seconds, 2),
