@@ -8,7 +8,7 @@ logger = get_logger(__name__)
 
 
 def id_generator() -> Iterator[int]:
-    i = 1
+    i = 0
     while True:
         yield i
         i += 1
