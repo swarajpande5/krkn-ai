@@ -6,7 +6,7 @@ from krkn_ai.models.scenario.base import BaseParameter
 
 class DummyEndParameter(BaseParameter):
     krknhub_name: str = "END"
-    krknctl_name: str = "end"
+    krknctl_name: str = "duration"
     value: int = 10
 
 

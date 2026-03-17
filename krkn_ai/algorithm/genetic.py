@@ -71,6 +71,7 @@ class GeneticAlgorithm:
             0  # Track new scenarios discovered in current generation
         )
 
+        self.baseline_result: Optional[CommandRunResult] = None
         self.valid_scenarios = ScenarioFactory.generate_valid_scenarios(
             self.config
         )  # List valid scenarios
@@ -118,13 +119,16 @@ class GeneticAlgorithm:
         # logger.debug("%s", json.dumps(self.config.model_dump(), indent=2))
 
     def simulate(self):
-        # Initial population (Gen 0)
-        self.population = self.create_population(self.config.population_size)
-
         # Variables to track the progress of the algorithm
         self.start_time = datetime.datetime.now(datetime.timezone.utc)
         start_time = time.time()
         cur_generation = 0
+
+        # Establish baseline by running dummy scenario to evaluate cluster health, fitness score before chaos testing
+        self.run_baseline()
+
+        # Initial population (Gen 0)
+        self.population = self.create_population(self.config.population_size)
 
         while True:
             # Calculate elapsed time since the start of the algorithm
@@ -217,6 +221,33 @@ class GeneticAlgorithm:
                 self.population.extend(
                     self.create_population(self.config.population_injection_size)
                 )
+
+    def run_baseline(self):
+        """
+        Run baseline scenario to get a baseline fitness score.
+        """
+        if not self.config.baseline.enable:
+            logger.info("Baseline is disabled, skipping baseline scenario")
+            return
+
+        # Run dummy scenario for baseline duration
+        logger.info(
+            "Running baseline scenario for %d seconds", self.config.baseline.duration
+        )
+        baseline_scenario = ScenarioFactory.create_dummy_scenario()
+        baseline_scenario.end.value = self.config.baseline.duration
+
+        # Run baseline scenario
+        self.baseline_result = self.krkn_client.run(baseline_scenario, 0)
+
+        self.baseline_result.scenario_id = "baseline"
+
+        # Save baseline result
+        self.save_scenario_result(self.baseline_result)
+        self.health_check_reporter.plot_report(self.baseline_result)
+        self.health_check_reporter.write_fitness_result(self.baseline_result)
+        if self.elastic_client is not None:
+            self.elastic_client.index_run_result(self.baseline_result, self.run_uuid)
 
     def adapt_mutation_rate(self):
         cfg = self.config.adaptive_mutation
@@ -693,6 +724,7 @@ class GeneticAlgorithm:
             config=self.config,
             seen_population=self.seen_population,
             best_of_generation=self.best_of_generation,
+            baseline_result=self.baseline_result,
             start_time=self.start_time,
             end_time=self.end_time,
             completed_generations=self.completed_generations,
