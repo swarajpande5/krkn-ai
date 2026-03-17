@@ -10,6 +10,7 @@ from krkn_ai.models.cluster_components import (
     Container,
     Namespace,
     Node,
+    OwnerReference,
     Pod,
     PVC,
     Service,
@@ -165,8 +166,14 @@ class ClusterManager:
                 )
                 continue
 
+            owner = None
+            if pod.metadata.owner_references:
+                ref = pod.metadata.owner_references[0]
+                owner = OwnerReference(name=ref.name, kind=ref.kind)
+
             pod_component = Pod(
                 name=pod.metadata.name,
+                owner=owner,
             )
             # Filter label keys by patterns
             labels = {}
