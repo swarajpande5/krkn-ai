@@ -86,6 +86,11 @@ class TestClusterManager:
         mock_node.metadata.name = "test-node"
         mock_node.metadata.labels = {"kubernetes.io/hostname": "test-node"}
         mock_node.spec.taints = None
+        mock_node.spec.unschedulable = False
+        mock_ready_condition = Mock()
+        mock_ready_condition.type = "Ready"
+        mock_ready_condition.status = "True"
+        mock_node.status.conditions = [mock_ready_condition]
         mock_node.status.allocatable = {"cpu": "2", "memory": "4Gi"}
         cluster_manager.core_api.list_node.return_value.items = [mock_node]
 
@@ -389,6 +394,11 @@ class TestClusterManager:
         mock_taint.value = None
         mock_taint.effect = "NoSchedule"
         mock_node.spec.taints = [mock_taint]
+        mock_node.spec.unschedulable = False
+        mock_ready_condition = Mock()
+        mock_ready_condition.type = "Ready"
+        mock_ready_condition.status = "True"
+        mock_node.status.conditions = [mock_ready_condition]
         mock_node.status.allocatable = {"cpu": "2", "memory": "4Gi"}
         cluster_manager.core_api.list_node.return_value.items = [mock_node]
 
@@ -428,6 +438,11 @@ class TestClusterManager:
         mock_node.metadata.name = "test-node"
         mock_node.metadata.labels = {"kubernetes.io/hostname": "test-node"}
         mock_node.spec.taints = None
+        mock_node.spec.unschedulable = False
+        mock_ready_condition = Mock()
+        mock_ready_condition.type = "Ready"
+        mock_ready_condition.status = "True"
+        mock_node.status.conditions = [mock_ready_condition]
         mock_node.status.allocatable = {"cpu": "2", "memory": "4Gi"}
         cluster_manager.core_api.list_node.return_value.items = [mock_node]
 
