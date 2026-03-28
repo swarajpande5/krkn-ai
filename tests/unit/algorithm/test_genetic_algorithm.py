@@ -24,12 +24,14 @@ class TestGeneticAlgorithmInitialization:
                     config=minimal_config, output_dir=temp_output_dir, format="yaml"
                 )
                 assert ga.config == minimal_config
-                assert ga.output_dir == temp_output_dir
+                # output_dir should include run_uuid subdirectory
+                assert ga.output_dir.startswith(temp_output_dir)
+                assert ga.run_uuid in ga.output_dir
                 assert ga.format == "yaml"
                 assert ga.population == []
                 assert len(ga.best_of_generation) == 0
                 # Verify config file is saved during initialization
-                config_path = os.path.join(temp_output_dir, "krkn-ai.yaml")
+                config_path = os.path.join(ga.output_dir, "krkn-ai.yaml")
                 assert os.path.exists(config_path)
 
     def test_init_with_population_size_less_than_2(

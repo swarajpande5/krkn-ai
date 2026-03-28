@@ -104,6 +104,7 @@ def run(
         elif runner_type.lower() == "krknhub":
             enum_runner_type = KrknRunnerType.HUB_RUNNER
 
+    genetic = None
     try:
         genetic = GeneticAlgorithm(
             parsed_config,
@@ -124,7 +125,8 @@ def run(
         logger.exception("Something went wrong: %s", e)
         exit(1)
     finally:
-        logger.info("Check run.log file in '%s' for more details.", output)
+        run_output = genetic.output_dir if genetic else output
+        logger.info("Check run.log file in '%s' for more details.", run_output)
 
 
 @main.command(help="Discover components for Krkn-AI tests")
