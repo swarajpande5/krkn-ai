@@ -22,7 +22,7 @@ from krkn_ai.models.config import ConfigFile
 from krkn_ai.reporter.generations_reporter import GenerationsReporter
 from krkn_ai.reporter.health_check_reporter import HealthCheckReporter
 from krkn_ai.reporter.json_summary_reporter import JSONSummaryReporter
-from krkn_ai.utils.logger import get_logger, update_log_dir
+from krkn_ai.utils.logger import get_logger
 from krkn_ai.chaos_engines.krkn_runner import KrknRunner
 from krkn_ai.utils.rng import rng
 from krkn_ai.models.custom_errors import PopulationSizeError, UniqueScenariosError
@@ -43,17 +43,14 @@ class GeneticAlgorithm:
         output_dir: str,
         format: str,
         runner_type: KrknRunnerType = None,
+        run_uuid: str = str(uuid.uuid4()),
     ):
         self.config = config
         self.format = format
-
-        # Generate unique run UUID for this experiment
-        self.run_uuid = str(uuid.uuid4())
-        logger.info("Krkn-AI run UUID: %s", self.run_uuid)
+        self.run_uuid = run_uuid
 
         # Organize results under run_uuid subdirectory
-        self.output_dir = os.path.join(output_dir, self.run_uuid)
-        update_log_dir(self.output_dir)
+        self.output_dir = output_dir
 
         # Initialize RNG with seed for reproducibility
         rng.set_seed(self.config.seed)

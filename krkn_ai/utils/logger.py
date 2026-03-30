@@ -72,32 +72,6 @@ def get_logger(name: str) -> logging.Logger:
     return logging.getLogger(fullname)
 
 
-def update_log_dir(new_dir: str):
-    """Update the file handler to write to a new directory."""
-    global _LOG_DIR
-    _LOG_DIR = new_dir
-    os.makedirs(new_dir, exist_ok=True)
-
-    parent = logging.getLogger("krkn-ai")
-    # Remove existing file handlers
-    for handler in parent.handlers[:]:
-        if isinstance(handler, logging.FileHandler):
-            handler.close()
-            parent.removeHandler(handler)
-
-    # Add new file handler in the updated directory
-    file_path = os.path.join(new_dir, "run.log")
-    fh = logging.FileHandler(file_path)
-    fh.setLevel(logging.DEBUG)
-    fh.setFormatter(
-        logging.Formatter(
-            "%(asctime)s %(levelname)-8s [%(name)s] %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-        )
-    )
-    parent.addHandler(fh)
-
-
 def get_log_dir() -> Optional[str]:
     return _LOG_DIR
 
