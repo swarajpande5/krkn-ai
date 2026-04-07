@@ -119,6 +119,16 @@ class GeneticAlgorithm:
         # logger.debug("%s", json.dumps(self.config.model_dump(), indent=2))
 
     def simulate(self):
+        try:
+            results_path = os.path.join(self.output_dir, "results.json")
+            if os.path.exists(results_path):
+                with open(results_path, "r") as f:
+                    data = json.load(f)
+                data["status"] = "in progress"
+                with open(results_path, "w") as f:
+                    json.dump(data, f)
+        except Exception as e:
+            logger.warning("Failed to update status to in progress: %s", e)
         # Variables to track the progress of the algorithm
         self.start_time = datetime.datetime.now(datetime.timezone.utc)
         start_time = time.time()

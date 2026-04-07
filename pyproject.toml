@@ -37,6 +37,11 @@ dev = [
   "jupyterlab",
 ]
 
+monitor = [
+    "plotly>=6.6.0",
+    "streamlit>=1.55.0",
+]
+
 [tool.setuptools]
 packages = ["krkn_ai"]
 

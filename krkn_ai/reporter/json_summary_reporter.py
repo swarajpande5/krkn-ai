@@ -56,6 +56,7 @@ class JSONSummaryReporter:
         self.end_time = end_time
         self.completed_generations = completed_generations
         self.seed = seed
+        self.status = "completed"
 
     def generate_summary(self) -> Dict[str, Any]:
         """
@@ -104,6 +105,7 @@ class JSONSummaryReporter:
             "start_time": self.start_time.isoformat() if self.start_time else None,
             "end_time": self.end_time.isoformat() if self.end_time else None,
             "duration_seconds": round(duration_seconds, 2),
+            "status": self.status,
             "config": {
                 "generations": self.config.generations,
                 "population_size": self.config.population_size,
