@@ -138,7 +138,7 @@ def run(
         os.makedirs(new_output_path, exist_ok=True)
         with open(os.path.join(new_output_path, "results.json"), "w") as f:
             json.dump({"status": STATUS_STARTED}, f)
-        
+
         genetic = GeneticAlgorithm(
             run_uuid=run_uuid,
             config=parsed_config,
@@ -166,25 +166,29 @@ def run(
                     json.dump({"status": STATUS_FAILED}, f)
             except Exception:
                 pass
-            
+
         if streamlit_process:
-            logger.info("Run finished. Monitoring dashboard will remain running. Terminate manually when done.")
+            logger.info(
+                "Run finished. Monitoring dashboard will remain running. Terminate manually when done."
+            )
         logger.info("Check run.log file in '%s' for more details.", new_output_path)
 
+
 @main.command(help="Monitor results from previous completed runs")
-@click.option(
-    "--output", "-o", help="Directory where results are saved.", default="./"
-)
-@click.option(
-    "--port", "-p", help="Port to run Streamlit server on.", default=8501
-)
+@click.option("--output", "-o", help="Directory where results are saved.", default="./")
+@click.option("--port", "-p", help="Port to run Streamlit server on.", default=8501)
 @click.pass_context
 def monitor(ctx, output: str, port: int):
     init_logger(output, False)
     logger = get_logger(__name__)
-    logger.info("Starting monitoring dashboard on port %s for output directory: %s", port, output)
+    logger.info(
+        "Starting monitoring dashboard on port %s for output directory: %s",
+        port,
+        output,
+    )
 
     DashboardManager.start(output, port, status="finished", background=False)
+
 
 @main.command(help="Discover components for Krkn-AI tests")
 @click.option(

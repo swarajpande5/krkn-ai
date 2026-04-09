@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def render_config(config_data):
     st.header("Krkn-AI Configuration")
     if config_data:

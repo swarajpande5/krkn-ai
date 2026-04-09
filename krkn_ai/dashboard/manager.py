@@ -4,17 +4,20 @@ import subprocess
 import importlib.util
 from krkn_ai.utils.logger import get_logger
 
+
 class DashboardManager:
     @staticmethod
     def start(output_dir: str, port: int, status: str, background: bool = True):
         logger = get_logger(__name__)
         dashboard_dir = os.path.dirname(__file__)
         actual_output = os.path.abspath(output_dir if output_dir else "./")
-        
+
         if importlib.util.find_spec("streamlit") is None:
-            logger.error("Monitoring dependencies not found. Please install them using 'pip install krkn-ai[monitor]'.")
+            logger.error(
+                "Monitoring dependencies not found. Please install them using 'pip install krkn-ai[monitor]'."
+            )
             sys.exit(1)
-            
+
         cmd = [
             sys.executable,
             "-m",
@@ -29,7 +32,7 @@ class DashboardManager:
             "--output-dir",
             actual_output,
         ]
-        
+
         try:
             if background:
                 process = subprocess.Popen(
