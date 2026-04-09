@@ -64,7 +64,7 @@ def render_detailed_scenarios(
         hovermode="closest",
     )
 
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(fig, use_container_width=True)
 
     st.divider()
 
@@ -97,6 +97,6 @@ def render_detailed_scenarios(
             ygap=1,
             hovertemplate="Application: %{y}<br>Seconds: %{x}s<br>Status (1=Success, 0=Fail): %{z}<extra></extra>",
         )
-        st.plotly_chart(fig_succ, width="stretch")
+        st.plotly_chart(fig_succ, use_container_width=True)
     else:
         st.info("No data available for Success Plot.")

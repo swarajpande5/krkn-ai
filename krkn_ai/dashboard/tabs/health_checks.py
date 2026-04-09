@@ -47,7 +47,7 @@ def render_health_checks(df, global_services=None):
         aspect="auto",
     )
     fig.update_layout(xaxis_title="Component", yaxis_title="Scenario ID")
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(fig, use_container_width=True)
 
     st.divider()
 
@@ -70,7 +70,7 @@ def render_health_checks(df, global_services=None):
         title=f"{line_metric} Trends",
     )
     fig2.update_layout(xaxis={"type": "category"})
-    st.plotly_chart(fig2, width="stretch")
+    st.plotly_chart(fig2, use_container_width=True)
 
     st.divider()
 
@@ -97,7 +97,7 @@ def render_health_checks(df, global_services=None):
         barmode="stack",
         color_discrete_map={"success_count": "#28a745", "failure_count": "#dc3545"},
     )
-    st.plotly_chart(fig3, width="stretch")
+    st.plotly_chart(fig3, use_container_width=True)
 
     st.divider()
 
@@ -116,7 +116,7 @@ def render_health_checks(df, global_services=None):
             title="Resilience Profile",
         )
         fig4.update_traces(fill="toself", opacity=0.5)
-        st.plotly_chart(fig4, width="stretch")
+        st.plotly_chart(fig4, use_container_width=True)
     else:
         st.info("No data for radar chart.")
 
@@ -146,7 +146,7 @@ def render_health_checks(df, global_services=None):
         xaxis_title="Component",
         yaxis_title="Response Time Range",
     )
-    st.plotly_chart(fig5, width="stretch")
+    st.plotly_chart(fig5, use_container_width=True)
 
     st.divider()
 

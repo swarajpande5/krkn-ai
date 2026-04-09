@@ -1,22 +1,15 @@
 import os
 import sys
 import subprocess
-import importlib.util
 from krkn_ai.utils.logger import get_logger
 
 
 class DashboardManager:
     @staticmethod
-    def start(output_dir: str, port: int, status: str, background: bool = True):
+    def start(output_dir: str, port: int, background: bool = True):
         logger = get_logger(__name__)
         dashboard_dir = os.path.dirname(__file__)
         actual_output = os.path.abspath(output_dir if output_dir else "./")
-
-        if importlib.util.find_spec("streamlit") is None:
-            logger.error(
-                "Monitoring dependencies not found. Please install them using 'pip install krkn-ai[monitor]'."
-            )
-            sys.exit(1)
 
         cmd = [
             sys.executable,
@@ -37,11 +30,30 @@ class DashboardManager:
             if background:
                 process = subprocess.Popen(
                     cmd,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
                 )
-                logger.info(f"Dashboard running at http://localhost:{port}")
-                return process
+                assert process.stdout is not None  # guaranteed by PIPE
+                assert process.stderr is not None  # guaranteed by PIPE
+                # Check quickly if the process failed to start
+                try:
+                    retcode = process.wait(timeout=2)
+                    # Process exited immediately — something went wrong
+                    stdout = process.stdout.read().decode(errors="replace")
+                    stderr = process.stderr.read().decode(errors="replace")
+                    output = (stderr or stdout).strip()
+                    logger.warning(
+                        "Dashboard process exited immediately (code %d): %s",
+                        retcode,
+                        output,
+                    )
+                    return None
+                except subprocess.TimeoutExpired:
+                    # Still running after 2s — detach pipes so they don't block
+                    process.stdout.close()
+                    process.stderr.close()
+                    logger.info(f"Dashboard running at http://localhost:{port}")
+                    return process
             else:
                 subprocess.run(cmd, check=True)
         except KeyboardInterrupt:

@@ -65,7 +65,7 @@ def render_fitness_evolution(df):
             hovermode="x unified",
             xaxis={"tickmode": "linear", "tick0": 1, "dtick": 1},
         )
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(fig, use_container_width=True)
     else:
         st.info("No fitness scores recorded yet.")
 
@@ -80,7 +80,7 @@ def render_scenario_distribution(df):
         df, x="scenario", title="Executed Scenarios Frequency", color="scenario"
     )
     fig.update_layout(xaxis_title="Scenario Name", yaxis_title="Execution Count")
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(fig, use_container_width=True)
 
 
 def render_scenario_fitness_variation(df):
@@ -115,7 +115,7 @@ def render_scenario_fitness_variation(df):
             hovermode="x unified",
             xaxis={"tickmode": "linear", "tick0": 1, "dtick": 1},
         )
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(fig, use_container_width=True)
     else:
         st.info("Not enough data points yet.")
 
@@ -185,7 +185,7 @@ def render_generation_details(df, title="Generation & Scenario Details"):
         st.dataframe(
             view,
             column_config=column_cfg,
-            width="stretch",
+            use_container_width=True,
             hide_index=True,
         )
     else:

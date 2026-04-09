@@ -130,7 +130,7 @@ def run(
     if monitoring:
         logger.info("Starting live monitoring dashboard...")
         streamlit_process = DashboardManager.start(
-            new_output_path, port, status="running", background=True
+            new_output_path, port, background=True
         )
 
     run_success = False
@@ -187,7 +187,7 @@ def monitor(ctx, output: str, port: int):
         output,
     )
 
-    DashboardManager.start(output, port, status="finished", background=False)
+    DashboardManager.start(output, port, background=False)
 
 
 @main.command(help="Discover components for Krkn-AI tests")

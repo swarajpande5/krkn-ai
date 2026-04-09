@@ -118,7 +118,7 @@ def main():
         st.sidebar.success("Execution completed!")
         auto_refresh = False
     else:
-        st.sidebar.success("Execution completed!")
+        st.sidebar.warning("Execution status unknown.")
         auto_refresh = False
 
     # Load data — loaders return (file_found: bool, df | None)
