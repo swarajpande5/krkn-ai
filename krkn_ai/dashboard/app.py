@@ -2,6 +2,7 @@ import os
 import argparse
 import time
 import json
+from typing import Optional
 import pandas as pd
 import streamlit as st
 from krkn_ai.constants import STATUS_STARTED, STATUS_IN_PROGRESS, STATUS_COMPLETED, STATUS_FAILED
@@ -38,7 +39,7 @@ def is_execution_running(output_dir: str) -> bool:
     return False
 
 
-def get_run_status(output_dir: str) -> str | None:
+def get_run_status(output_dir: str) -> Optional[str]:
     """Return the raw status string from results.json, or None if unavailable."""
     results_file = os.path.join(output_dir, "results.json")
     if not os.path.exists(results_file):
